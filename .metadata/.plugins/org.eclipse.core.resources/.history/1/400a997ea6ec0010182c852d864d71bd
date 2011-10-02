@@ -1,0 +1,67 @@
+package ioModule;
+
+import java.util.ArrayList;
+
+public class Node {
+	
+	private int x;
+	private int y;
+	private int status;
+	private ArrayList<Node> connections;
+	
+	
+	public Node(int x, int y, int status, ArrayList<Node> connections)
+	{
+		this.x = x;
+		this.y = y;
+		this.status = status;
+		this.connections = connections;
+		
+	}
+	
+	/*
+	 * Adds node n to index i in ArrayList connections
+	 * index 0 --> ww
+	 * index 1 --> nw
+	 * index 2 --> ne
+	 * index 3 --> ee
+	 * index 4 --> se
+	 * index 5 --> sw
+	 */
+	public void addConnection(Node n, int i)
+	{
+		connections.set(i, n);
+	}
+	
+	public ArrayList<Node> getConnections()
+	{
+		return connections;
+	}
+	
+	public int getStatus()
+	{
+		return status;
+	}
+	
+	public void setStatus(int status)
+	{
+		this.status = status;
+	}
+	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public int getY()
+	{
+		return y;
+	}
+	
+}
+
+/*
+Node class
+- include neighbors
+- include piece status
+*/

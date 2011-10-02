@@ -2,27 +2,54 @@ package ioModule;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Scanner;
 
 public class IO
 {
-	//Read input from the server
 	
-	//Initialize the board
 	
-	//Keep the board up to date (use Graph class)
-	
-	public Graph createBoard(char[][] matrix)
+	//USE THE Board.java CLASS THAT IS PROVIDED AS GUIDANCE
+	//Creates a graph from a given input.
+	//The graph contains a hashtable of nodes.
+	//Each node contains a set of connections.
+	//If a connection is "null", it does not exist.
+	public Graph createBoard(Scanner sc)
 	{
 		Hashtable<String, Node> lookup = new Hashtable<String, Node>();
 		ArrayList<Node> empty = new ArrayList<Node>();
+		int[][] matrix = new int[17][25];
 		
-		for(int i = 0; i < matrix.length; i++) //row length should = 17
+		int i = 0;
+		while (sc.hasNextLine())
 		{
-			for(int j = 0; j < matrix[0].length; j++) //collumn length should = 25
+			String s = sc.nextLine();
+			
+			/*
+			if(i == 17)
 			{
-				if(matrix[i][j] != ' ')
+				//Need to adjust the string for each call.
+				//Possible solution is to create a new string as a substring
+				//of the first string to the end.
+				int player1time = Integer.parseInt(s.substring(0,  s.indexOf(' ')));
+				int player2time = Integer.parseInt(s.substring(0,  s.indexOf(' ')));
+				int player1gray = Integer.parseInt(s.substring(0,  s.indexOf(' ')));
+				int player2gray = Integer.parseInt(s.substring(0,  s.indexOf(' ')));
+				int turn = Integer.parseInt(s);
+				break;
+			}
+			*/
+			
+			
+			for(int j = 0; j < 25; j++)
+			{
+				matrix[i][j] = s.charAt(j);
+				
+				
+				//Creates a node for each non-empty space.
+				//Then adds that node to a hashtable.
+				if(s.charAt(j) != ' ')
 				{
-					Node n = new Node(i, j, matrix[i][j], empty);
+					Node n = new Node(i, j, s.charAt(j), empty);
 					
 					String a = Integer.toString(i);
 					String b = Integer.toString(j);
@@ -30,13 +57,17 @@ public class IO
 					lookup.put(a.concat(b), n);	//adds a node to the hashtable with key "xy"
 				}
 			}
+			i +=1;
 		}
 		
-		for(int i = 0; i < matrix.length; i++) //row length should = 17
+		
+		for(int g = 0; g < matrix.length; g++)
 		{
-			for(int j = 0; j < matrix[0].length; j++) //collumn length should = 25
+			for(int j = 0; j < matrix[0].length; j++)
 			{
-				if(matrix[i][j] != ' ')
+				
+				//Adds connections for each node in the hashtable
+				if(matrix[g][j] != ' ')
 				{
 					Node ww = null;
 					Node nw = null;
@@ -45,42 +76,42 @@ public class IO
 					Node se = null;
 					Node sw = null;
 					
-					if(lookup.contains(Integer.toString(i-2).concat(Integer.toString(j))))
+					if(lookup.contains(Integer.toString(g-2).concat(Integer.toString(j))))
 					{
-						ww = lookup.get(Integer.toString(i-2).concat(Integer.toString(j)));
+						ww = lookup.get(Integer.toString(g-2).concat(Integer.toString(j)));
 					}
 					
-					if(lookup.contains(Integer.toString(i-1).concat(Integer.toString(j+1))))
+					if(lookup.contains(Integer.toString(g-1).concat(Integer.toString(j-1))))
 					{
-						nw = lookup.get(Integer.toString(i-1).concat(Integer.toString(j+1)));
+						nw = lookup.get(Integer.toString(g-1).concat(Integer.toString(j-1)));
 					}
 					
-					if(lookup.contains(Integer.toString(i+1).concat(Integer.toString(j+1))))
+					if(lookup.contains(Integer.toString(g+1).concat(Integer.toString(j-1))))
 					{
-						ne = lookup.get(Integer.toString(i+1).concat(Integer.toString(j+1)));
+						ne = lookup.get(Integer.toString(g+1).concat(Integer.toString(j-1)));
 					}
 					
-					if(lookup.contains(Integer.toString(i+2).concat(Integer.toString(j))))
+					if(lookup.contains(Integer.toString(g+2).concat(Integer.toString(j))))
 					{
-						ee = lookup.get(Integer.toString(i+2).concat(Integer.toString(j)));
+						ee = lookup.get(Integer.toString(g+2).concat(Integer.toString(j)));
 					}
 					
-					if(lookup.contains(Integer.toString(i+1).concat(Integer.toString(j-1))))
+					if(lookup.contains(Integer.toString(g+1).concat(Integer.toString(j+1))))
 					{
-						se = lookup.get(Integer.toString(i+1).concat(Integer.toString(j-1)));
+						se = lookup.get(Integer.toString(g+1).concat(Integer.toString(j+1)));
 					}
 					
-					if(lookup.contains(Integer.toString(i-1).concat(Integer.toString(j-1))))
+					if(lookup.contains(Integer.toString(g-1).concat(Integer.toString(j+1))))
 					{
-						sw = lookup.get(Integer.toString(i-1).concat(Integer.toString(j-1)));
+						sw = lookup.get(Integer.toString(g-1).concat(Integer.toString(j+1)));
 					}
 					
-					lookup.get(Integer.toString(i).concat(Integer.toString(j))).addConnection(ww, 0);
-					lookup.get(Integer.toString(i).concat(Integer.toString(j))).addConnection(nw, 0);
-					lookup.get(Integer.toString(i).concat(Integer.toString(j))).addConnection(ne, 0);
-					lookup.get(Integer.toString(i).concat(Integer.toString(j))).addConnection(ee, 0);
-					lookup.get(Integer.toString(i).concat(Integer.toString(j))).addConnection(se, 0);
-					lookup.get(Integer.toString(i).concat(Integer.toString(j))).addConnection(sw, 0);
+					lookup.get(Integer.toString(g).concat(Integer.toString(j))).addConnection(ww, 0);
+					lookup.get(Integer.toString(g).concat(Integer.toString(j))).addConnection(nw, 0);
+					lookup.get(Integer.toString(g).concat(Integer.toString(j))).addConnection(ne, 0);
+					lookup.get(Integer.toString(g).concat(Integer.toString(j))).addConnection(ee, 0);
+					lookup.get(Integer.toString(g).concat(Integer.toString(j))).addConnection(se, 0);
+					lookup.get(Integer.toString(g).concat(Integer.toString(j))).addConnection(sw, 0);
 
 				}
 			}
@@ -88,6 +119,4 @@ public class IO
 		Graph g = new Graph(lookup);
 		return g;
 	}
-	
-	
 }

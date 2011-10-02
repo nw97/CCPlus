@@ -1,0 +1,31 @@
+package ioModule;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+public class Graph {
+
+	private Hashtable<String, Node> lookup;
+	
+	public Graph(Hashtable<String, Node> lookup)
+	{
+		this.lookup = lookup;
+	}
+	
+	public ArrayList<Node> findMoves(Node n)
+	{
+		ArrayList<Node> moves= new ArrayList<Node>();
+		
+		for(int i = 0; i < 6; i ++)
+		{
+			
+		}
+		
+		return moves;
+	}
+}
+
+/*
+Graph class (JGraphT?)
+- Fast look up speed (position search, hash)
+*/

@@ -1,0 +1,23 @@
+package ioModule;
+
+import java.util.Hashtable;
+
+public class Graph {
+
+	private Hashtable<String, Node> lookup;
+	
+	public Graph(Hashtable<String, Node> lookup)
+	{
+		this.lookup = lookup;
+	}
+	
+	public void makeConnections(Graph g)
+	{
+		
+	}
+}
+
+/*
+Graph class (JGraphT?)
+- Fast look up speed (position search, hash)
+*/
