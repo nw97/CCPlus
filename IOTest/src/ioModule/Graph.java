@@ -1,9 +1,11 @@
 package ioModule;
-
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Hashtable;
+import java.util.Scanner;
 
-public class Graph {
-
+public class Graph 
+{
 	private Hashtable<String, Node> lookup;
 	
 	
@@ -17,8 +19,13 @@ public class Graph {
 	{
 		return lookup;
 	}
-	
 }
+
+
+
+
+
+
 
 /*
 Graph class (JGraphT?)

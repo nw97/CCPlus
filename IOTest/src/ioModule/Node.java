@@ -3,14 +3,24 @@ package ioModule;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class Node {
-	
+public class Node 
+{
+	private ArrayList<String> moves = new ArrayList<String>();
 	private int x;
 	private int y;
 	private int status;
-	private ArrayList<Node> connections;
-	private ArrayList<Node> nextmoves;
+	private ArrayList<Node> connections = new ArrayList<Node>(6);
+	private ArrayList<Node> nextmoves = new ArrayList<Node>(100);
 	
+	
+	public void fillConections(Node n)
+	{
+		
+		for(int i = 0; i < 6; i++)
+		{
+			n.addConnection(null, i);
+		}
+	}
 	
 	public Node(int x, int y, int status, ArrayList<Node> connections)
 	{
@@ -24,46 +34,393 @@ public class Node {
 	
 	
 	
-	//WORK IN PROGRESS
-	/*
-	private Hashtable<String, Node> findMovesHelper(Node n, Hashtable<String, Node> dic)
+	//Adds all available moves to a piece to a list
+	public ArrayList<String> getMoves(Graph g)
 	{
-		return dic;
-	}
-	
-	public ArrayList<Node> findMoves(Node n)
-	{
-		ArrayList<Node> moves= new ArrayList<Node>();
-		Hashtable<String, Node> dic = new Hashtable<String, Node>();
+	//Adds all moves available in adjacent locations	
 		
-		for(int i = 0; i < 6; i ++)
+		int x = getX();
+		int y = getY();
+		
+		moves.add(Integer.toString(x).concat(" ").concat(Integer.toString(y)));
+		
+		ArrayList<Node> con = getConnections();
+		ArrayList<Integer> empty = new ArrayList<Integer>();
+		ArrayList<Integer> occupied = new ArrayList<Integer>();
+		
+		for(int i = 0; i < 6; i++)
 		{
-			try
+			if (con.get(i) != null)
 			{
-				if (n.getConnections().get(i).getStatus() == 0)
+				if (con.get(i).getStatus() == 0)
 				{
-					int x = n.getConnections().get(i).getX();
-					int y = n.getConnections().get(i).getY();
-					
-					String a = Integer.toString(x);
-					String b = Integer.toString(y);
-					
-					moves.add(n.getConnections().get(i));
-					dic.put(a.concat(b), n.getConnections().get(i));
+					empty.add(i);
 				}
 				else
 				{
-					
+					occupied.add(i);
 				}
 			}
-			catch (NullPointerException e)
+		}
+		
+		
+		//ADDS ADJACENT SPACES
+		for (int i = 0; i < empty.size(); i++)
+		{
+			int val = empty.get(i);
+			
+			if (val == 0)
 			{
-				//do nothing
+				String a = Integer.toString(x-2);
+				String b = Integer.toString(y);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 1)
+			{
+				String a = Integer.toString(x-1);
+				String b = Integer.toString(y-1);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 2)
+			{
+				String a = Integer.toString(x+1);
+				String b = Integer.toString(y-1);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 3)
+			{
+				String a = Integer.toString(x+2);
+				String b = Integer.toString(y);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 4)
+			{
+				String a = Integer.toString(x+1);
+				String b = Integer.toString(y+1);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 5)
+			{
+				String a = Integer.toString(x-1);
+				String b = Integer.toString(y+1);
+				moves.add(a.concat(" ").concat(b));
 			}
 		}
+		//_______________________________________
+		
+		for (int i = 0; i < occupied.size(); i++)
+		{
+			int val = occupied.get(i);
+			
+			if (val == 0)
+			{
+				String a = Integer.toString(x-4);
+				String b = Integer.toString(y);
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+						
+					}
+				}
+				
+			}
+			if (val == 1)
+			{
+				String a = Integer.toString(x-2);
+				String b = Integer.toString(y-2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			if (val == 2)
+			{
+				String a = Integer.toString(x+2);
+				String b = Integer.toString(y-2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			if (val == 3)
+			{
+				String a = Integer.toString(x+4);
+				String b = Integer.toString(y);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			if (val == 4)
+			{
+				String a = Integer.toString(x+2);
+				String b = Integer.toString(y+2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			if (val == 5)
+			{
+				String a = Integer.toString(x-2);
+				String b = Integer.toString(y+2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+		}
+
+		moves.remove(0);
+		
+		//System.out.println("empty = " + empty);
+		//System.out.println("occupied = " + occupied);
+		//System.out.println("moves = " + moves);
+		
 		return moves;
 	}
-	/*
+	
+	private void jumpMoves(Node n, Graph g)
+	{
+		int x = n.getX();
+		int y = n.getY();
+		
+		String location = Integer.toString(x).concat(" ").concat(Integer.toString(y));
+		moves.add(location);
+		//System.out.print("moves = ");
+		//System.out.println(moves);
+		
+		ArrayList<Integer> jumps = new ArrayList<Integer>();
+		
+		ArrayList<Node> con = n.getConnections();
+		
+		//System.out.print("node = ");
+		//System.out.println(n);
+		//System.out.print("con = ");
+		//System.out.println(con);
+		
+		for(int i = 0; i < 6; i++)
+		{
+			if (con.get(i) != null)
+			{
+				if (con.get(i).getStatus() != 0)
+				{
+					jumps.add(i);
+				}
+			}
+		}
+		
+		for (int i = 0; i < jumps.size(); i++)
+		{
+			int val = jumps.get(i);
+			
+			if (val == 0)
+			{
+				String a = Integer.toString(x-4);
+				String b = Integer.toString(y);
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			
+			if (val == 1)
+			{
+				String a = Integer.toString(x-2);
+				String b = Integer.toString(y-2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			
+			if (val == 2)
+			{
+				String a = Integer.toString(x+2);
+				String b = Integer.toString(y-2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			
+			if (val == 3)
+			{
+				String a = Integer.toString(x+4);
+				String b = Integer.toString(y);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					System.out.print("g node = ");
+					System.out.println(g.getTable().get(key));
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			
+			if (val == 4)
+			{
+				String a = Integer.toString(x+2);
+				String b = Integer.toString(y+2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+			
+			if (val == 5)
+			{
+				String a = Integer.toString(x-2);
+				String b = Integer.toString(y+2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+					{
+						String o = Integer.toString(g.getTable().get(key).getX());
+						String p = Integer.toString(g.getTable().get(key).getY());
+						
+						if (!moves.contains(o.concat(" ").concat(p)))
+						{
+							jumpMoves(g.getTable().get(key), g);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
 	
 	
 	
@@ -83,7 +440,8 @@ public class Node {
 	 */
 	public void addConnection(Node n, int i)
 	{
-		connections.set(i, n);
+		//System.out.println(connections);
+		connections.add(i, n);
 	}
 	
 	public ArrayList<Node> getConnections()

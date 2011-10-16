@@ -1,0 +1,231 @@
+package ioModule;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+public class Node 
+{
+	private ArrayList<String> moves = new ArrayList<String>();
+	private int x;
+	private int y;
+	private int status;
+	private ArrayList<Node> connections = new ArrayList<Node>(6);
+	private ArrayList<Node> nextmoves = new ArrayList<Node>(100);
+	
+	
+	public void fillConections(Node n)
+	{
+		
+		for(int i = 0; i < 6; i++)
+		{
+			n.addConnection(null, i);
+		}
+	}
+	
+	public Node(int x, int y, int status, ArrayList<Node> connections)
+	{
+		this.x = x;
+		this.y = y;
+		this.status = status;
+		this.connections = connections;
+	}
+	
+	
+	
+	
+	
+	//Adds all available moves to a piece to a list
+	public ArrayList<String> getMoves(Graph g)
+	{
+	//Adds all moves available in adjacent locations	
+		
+		int x = getX();
+		int y = getY();
+		
+		moves.add(Integer.toString(x).concat(" ").concat(Integer.toString(y)));
+		
+		ArrayList<Node> con = getConnections();
+		
+		ArrayList<Integer> empty = new ArrayList<Integer>();
+		ArrayList<Integer> occupied = new ArrayList<Integer>();
+		for(int i = 0; i < 6; i++)
+		{
+			if (con.get(i) != null)
+			{
+				if (con.get(i).getStatus() == 0)
+				{
+					empty.add(i);
+				}
+				else
+				{
+					occupied.add(i);
+				}
+			}
+		}
+		
+		for (int i = 0; i < empty.size(); i++)
+		{
+			int val = empty.get(i);
+			
+			if (val == 0)
+			{
+				String a = Integer.toString(x-2);
+				String b = Integer.toString(y);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 1)
+			{
+				String a = Integer.toString(x-1);
+				String b = Integer.toString(y-1);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 2)
+			{
+				String a = Integer.toString(x+1);
+				String b = Integer.toString(y-1);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 3)
+			{
+				String a = Integer.toString(x+2);
+				String b = Integer.toString(y);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 4)
+			{
+				String a = Integer.toString(x+1);
+				String b = Integer.toString(y+1);
+				moves.add(a.concat(" ").concat(b));
+			}
+			if (val == 5)
+			{
+				String a = Integer.toString(x-1);
+				String b = Integer.toString(y+1);
+				moves.add(a.concat(" ").concat(b));
+			}
+		}
+		
+		for (int i = 0; i < occupied.size(); i++)
+		{
+			int val = occupied.get(i);
+			
+			if (val == 0)
+			{
+				String a = Integer.toString(x-4);
+				String b = Integer.toString(y);
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+						{
+							jumpMoves(g.getTable().get(key));
+						}
+				}
+				
+			}
+			if (val == 1)
+			{
+				String a = Integer.toString(x-2);
+				String b = Integer.toString(y-2);
+				
+				String key = a.concat(" ").concat(b);
+				
+				if (g.getTable().containsKey(key))
+				{
+					if (g.getTable().get(key).getStatus() == 0)
+						{
+							jumpMoves(g.getTable().get(key));
+						}
+				}
+			}
+			if (val == 2)
+			{
+				String a = Integer.toString(x+2);
+				String b = Integer.toString(y-2);
+				
+			}
+			if (val == 3)
+			{
+				String a = Integer.toString(x+4);
+				String b = Integer.toString(y);
+				
+			}
+			if (val == 4)
+			{
+				String a = Integer.toString(x+2);
+				String b = Integer.toString(y+2);
+				
+			}
+			if (val == 5)
+			{
+				String a = Integer.toString(x-2);
+				String b = Integer.toString(y+2);
+				
+			}
+		}
+		
+		//recursively finds jump moves
+		
+		System.out.println(empty);
+		System.out.println(occupied);
+		System.out.println("moves = " + moves);
+		
+		return moves;
+	}
+	
+	private void jumpMoves(Node n)
+	{
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * Adds node n to index i in ArrayList connections
+	 * index 0 --> ww
+	 * index 1 --> nw
+	 * index 2 --> ne
+	 * index 3 --> ee
+	 * index 4 --> se
+	 * index 5 --> sw
+	 */
+	public void addConnection(Node n, int i)
+	{
+		//System.out.println(connections);
+		connections.add(i, n);
+	}
+	
+	public ArrayList<Node> getConnections()
+	{
+		return connections;
+	}
+	
+	public int getStatus()
+	{
+		return status;
+	}
+	
+	public void setStatus(int status)
+	{
+		this.status = status;
+	}
+	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public int getY()
+	{
+		return y;
+	}
+}

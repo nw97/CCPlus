@@ -1,0 +1,211 @@
+package ioModule;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Scanner;
+
+public class IO
+{
+	private int player1time;
+	private int player2time;
+	private int player1gray;
+	private int player2gray;
+	private int turn;
+	private static String filename = "/Users/Home/Desktop/School Stuff/2011/CS4701/release/board2.txt";
+	
+	//Creates a graph from a given input.
+	//The graph contains a hashtable of nodes.
+	//Each node contains a set of connections.
+	//If a connection is "null", it does not exist.
+	public static Graph createBoard(Scanner sc)
+	{
+		Hashtable<String, Node> lookup = new Hashtable<String, Node>();
+		int[][] matrix = new int[17][25];
+		
+		//j -> x
+		//i -> y
+		
+		int i = 0;
+		while (sc.hasNextLine())
+		{
+			String s = sc.nextLine();
+			//System.out.println(s);
+			
+			if(i == 17)
+			{
+				String st;
+				
+				int player1time = Integer.parseInt(s.substring(0,  s.indexOf(' ')));
+				st = s.substring(s.indexOf(' ')+1);
+				s = st;
+				int player2time = Integer.parseInt(s.substring(0,  s.indexOf(' ')));
+				st = s.substring(s.indexOf(' ')+1);
+				s = st;
+				int player1gray = Integer.parseInt(s.substring(0,  s.indexOf(' ')));
+				st = s.substring(s.indexOf(' ')+1);
+				s = st;
+				int player2gray = Integer.parseInt(s.substring(0,  s.indexOf(' ')));
+				st = s.substring(s.indexOf(' ')+1);
+				s = st;
+				int turn = Integer.parseInt(s);
+				break;
+			}
+			
+			else
+			{
+				for(int j = 0; j < 25; j++)
+				{
+					
+					matrix[i][j] = Character.getNumericValue(s.charAt(j));
+					
+					//Creates a node for each non-empty space.
+					//Then adds that node to a hashtable.
+					if(s.charAt(j) != ' ')
+					{
+						ArrayList<Node> empty = new ArrayList<Node>();
+						Node n = new Node(j, i, Character.getNumericValue(s.charAt(j)), empty);
+						
+						String a = Integer.toString(j);
+						String b = Integer.toString(i);
+						
+						lookup.put(a.concat(" ").concat(b), n);	//adds a node to the hashtable with key "xy"
+						//System.out.println("lookup = " + lookup);
+						
+					}
+				}
+				i +=1;
+			}
+		}
+
+		System.out.println(Character.getNumericValue("0"));
+		//j -> x
+		//g -> y
+		for(int g = 0; g < matrix.length; g++)
+		{
+			for(int j = 0; j < matrix[0].length; j++)
+			{
+				//Adds connections for each node in the hashtable
+				if(matrix[g][j] != -1)
+				{
+					Node ww = null;
+					Node nw = null;
+					Node ne = null;
+					Node ee = null;
+					Node se = null;
+					Node sw = null;
+					
+					try
+					{
+						ww = lookup.get(Integer.toString(j-2).concat(" ").concat(Integer.toString(g)));
+					}
+					catch(NullPointerException n)
+					{
+					}
+					
+					try
+					{
+						nw = lookup.get(Integer.toString(j-1).concat(" ").concat(Integer.toString(g-1)));
+					}
+					catch(NullPointerException n)
+					{
+					}
+					
+					try
+					{
+						ne = lookup.get(Integer.toString(j+1).concat(" ").concat(Integer.toString(g-1)));
+					}
+					catch(NullPointerException n)
+					{
+					}
+					
+					try
+					{
+						ee = lookup.get(Integer.toString(j+2).concat(" ").concat(Integer.toString(g)));
+					}
+					catch(NullPointerException n)
+					{
+					}
+					
+					try
+					{
+						se = lookup.get(Integer.toString(j+1).concat(" ").concat(Integer.toString(g+1)));
+					}
+					catch(NullPointerException n)
+					{
+					}
+					
+					try
+					{
+						sw = lookup.get(Integer.toString(j-1).concat(" ").concat(Integer.toString(g+1)));
+					}
+					catch(NullPointerException n)
+					{
+					}
+					
+					
+					try
+					{
+						Node temp = lookup.get(Integer.toString(j).concat(" ").concat(Integer.toString(g)));
+						temp.addConnection(ww, 0);
+						temp.addConnection(nw, 1);
+						temp.addConnection(ne, 2);
+						temp.addConnection(ee, 3);
+						temp.addConnection(se, 4);
+						temp.addConnection(sw, 5);
+						
+						System.out.println(lookup.get(Integer.toString(g).concat(" ").concat(Integer.toString(j))).getX());
+						System.out.println(lookup.get(Integer.toString(g).concat(" ").concat(Integer.toString(j))).getY());
+						System.out.println(lookup.get(Integer.toString(g).concat(" ").concat(Integer.toString(j))).getConnections());
+						if (ne != null){System.out.println("YES");}
+					}
+					catch(NullPointerException n)
+					{
+					}
+				}
+			}
+		}
+		
+		//System.out.println(matrix[0][0]);
+		
+		Graph g = new Graph(lookup);
+		//System.out.println("Graph = " + g);
+		//System.out.println("connections = " + lookup.get("4 12").getConnections());
+		//System.out.println("connections = " + lookup.get("4 10").getConnections());
+		
+		/*
+		for(int r = 0; r < 6; r++)
+		{
+			System.out.println(lookup.get("4 12").getConnections().get(r).getX());
+			System.out.println(lookup.get("4 12").getConnections().get(r).getY());
+			System.out.println();
+		}
+		*/
+		/*
+		System.out.print("connections = ");
+		System.out.println(lookup.get("17 7").getConnections());
+		
+		System.out.print("node1 = ");
+		System.out.println(lookup.get("17 7"));
+		
+		lookup.get("9 7").getMoves(g);
+		*/
+		return g;
+		
+	}
+	
+	
+	public static void main(String[] args)
+	{
+		File f = new File(filename);
+		
+		try {
+			Scanner sc = new Scanner(f);
+			createBoard(sc);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

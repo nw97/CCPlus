@@ -1,0 +1,48 @@
+package ioModule;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Hashtable;
+import java.util.Scanner;
+
+public class Graph 
+{
+
+	private Hashtable<String, Node> lookup;
+	
+	
+	
+	public Graph(Hashtable<String, Node> lookup)
+	{
+		this.lookup = lookup;
+	}
+	
+	public Hashtable<String, Node> getTable()
+	{
+		return lookup;
+	}
+	
+	
+	
+	public static void main(String[] args)
+	{
+		File f = new File("/Users/Home/Desktop/School Stuff/2011/CS4701/release/Board.txt");
+		try {
+			Scanner sc = new Scanner(f);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+}
+
+
+
+
+
+
+
+/*
+Graph class (JGraphT?)
+- Fast look up speed (position search, hash)
+*/
